@@ -9,7 +9,9 @@ public class Configuration {
 	private static Configuration instance;
 	private String previousFilePath;
 	private String nextFilePath;
-	private String outFolderPath;
+	private String intersection;
+	private String removedFromPreviousPath;
+	private String addedInNextPath;
 	
 	private Configuration() {
 		Properties config = new Properties();
@@ -17,7 +19,9 @@ public class Configuration {
         	config.load(new FileInputStream("config/Configuration.properties"));
         	setPreviousFilePath(config.getProperty("previous"));
         	setNextFilePath(config.getProperty("next"));
-        	setOutFolderPath(config.getProperty("out"));
+        	setIntersection(config.getProperty("intersection"));
+        	setRemovedFromPreviousPath(config.getProperty("removedFromPrevious"));
+        	setAddedInNextPath(config.getProperty("addedInNext"));
         } catch (IOException ex) {
             System.out.println("Error"+ ex.getMessage());
         }
@@ -46,11 +50,27 @@ public class Configuration {
 		this.nextFilePath = nextFilePath;
 	}
 
-	public String getOutFolderPath() {
-		return outFolderPath;
+	public String getIntersection() {
+		return intersection;
 	}
 
-	private void setOutFolderPath(String outFolderPath) {
-		this.outFolderPath = outFolderPath;
+	public void setIntersection(String intersection) {
+		this.intersection = intersection;
+	}
+
+	public String getAddedInNextPath() {
+		return addedInNextPath;
+	}
+
+	public void setAddedInNextPath(String addedInNextPath) {
+		this.addedInNextPath = addedInNextPath;
+	}
+
+	public String getremovedFromPreviousPath() {
+		return removedFromPreviousPath;
+	}
+
+	public void setRemovedFromPreviousPath(String removedFromPreviousPath) {
+		this.removedFromPreviousPath = removedFromPreviousPath;
 	}
 }

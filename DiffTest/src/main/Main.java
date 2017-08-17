@@ -1,7 +1,6 @@
 package main;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -19,14 +18,32 @@ public class Main {
 			Set<String> previousColumnsSet = getPreviousColumnsSet(configuration.getPreviousFilePath());
 			Set<String> nextColumnsSet = getPreviousColumnsSet(configuration.getNextFilePath());
 			
-			previousColumnsSet.retainAll(nextColumnsSet);
+			Set<String> removedFromPreviousSet = getDifferenceBetweenSets(previousColumnsSet, nextColumnsSet);
+			writeToFile(removedFromPreviousSet, configuration.getremovedFromPreviousPath());
 			
-			writeToFile(previousColumnsSet, configuration.getOutFolderPath());
+			Set<String> intersection = getIntersectionOfSets(previousColumnsSet, nextColumnsSet);
+			writeToFile(intersection, configuration.getIntersection());
+			
+			Set<String> addedElementsInNextSet = getDifferenceBetweenSets(nextColumnsSet, previousColumnsSet);
+			writeToFile(addedElementsInNextSet, configuration.getAddedInNextPath());
+						
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
+	private static Set<String> getDifferenceBetweenSets(Set<String> set1, Set<String> set2) {
+		Set<String> setCopy = new LinkedHashSet<>(set1);
+		setCopy.removeAll(set2);
+		return setCopy;
+	}
+	
+	private static Set<String> getIntersectionOfSets(Set<String> set1, Set<String> set2) {
+		Set<String> setCopy = new LinkedHashSet<>(set1);
+		setCopy.retainAll(set2);
+		return setCopy;
+	}
+	
 	private static void writeToFile(Set<String> set, String outFolderPath) throws IOException {
 		 PrintWriter writer = new PrintWriter(outFolderPath, "UTF-8");
 		 Iterator<String> itr = set.iterator();
@@ -41,7 +58,6 @@ public class Main {
 	    BufferedReader br = new BufferedReader(new FileReader(filePath));
 	    String sCurrentLine;
 		while ((sCurrentLine = br.readLine()) != null) {
-			System.out.println(sCurrentLine);
 			if (!sCurrentLine.isEmpty() && !sCurrentLine.startsWith("#")) {
 				previousColumns.add(sCurrentLine.trim());
 			}
